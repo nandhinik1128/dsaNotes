@@ -1,0 +1,804 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA | My Interactive Notes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f4f6ff;
+  --card: #ffffff;
+  --text: #202746;
+  --muted: #777e9c;
+  --purple: #7064df;
+  --purple-light: #eeeaff;
+  --mint: #e2f8f0;
+  --blue: #e7f2ff;
+  --border: #e6e8f5;
+  --code: #24243a;
+}
+body.dark {
+  --bg: #151628;
+  --card: #202139;
+  --text: #f2f1ff;
+  --muted: #b1b2cf;
+  --purple-light: #353052;
+  --mint: #243b39;
+  --blue: #26354b;
+  --border: #373852;
+  --code: #10111f;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Manrope, Arial, sans-serif;
+  transition: background .25s, color .25s;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+.topbar {
+  height: 72px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.brand { font-size: 20px; font-weight: 800; }
+.brand span { color: var(--purple); }
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.pill {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  max-width: 1500px;
+  margin: auto;
+}
+.sidebar {
+  position: sticky;
+  top: 72px;
+  height: calc(100vh - 72px);
+  overflow: auto;
+  padding: 28px 18px;
+  border-right: 1px solid var(--border);
+}
+.side-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  font-weight: 800;
+  margin: 12px 10px;
+}
+.nav-link {
+  display: block;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 12px;
+  margin: 5px 0;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.nav-link:hover, .nav-link.active {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+main { padding: 30px clamp(18px, 4vw, 55px) 70px; min-width: 0; }
+.hero {
+  padding: clamp(28px, 5vw, 60px);
+  border-radius: 28px;
+  background: linear-gradient(125deg, #eae8ff, #e3f8f0 65%, #e4f0ff);
+  color: #25264a;
+  position: relative;
+  overflow: hidden;
+}
+.hero-tag {
+  display: inline-block;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 30px;
+  color: #7064df;
+  font-size: 12px;
+  font-weight: 800;
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -2px;
+  line-height: 1.12;
+  margin: 22px 0 12px;
+}
+.hero p { line-height: 1.8; max-width: 620px; color: #555c7a; }
+.progress-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--purple);
+  transition: width .3s;
+}
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 20px 0 8px;
+}
+.section { margin-top: 44px; scroll-margin-top: 95px; }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.eyebrow {
+  font-size: 11px;
+  color: var(--purple);
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+h2 { font-size: clamp(23px, 3vw, 30px); margin: 6px 0; letter-spacing: -.8px; }
+h3 { margin-top: 0; }
+.muted { color: var(--muted); line-height: 1.8; font-size: 14px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.card {
+  padding: 23px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 20px;
+  min-width: 0;
+  box-shadow: 0 8px 30px rgba(60,60,120,.035);
+}
+.card:hover { border-color: #c5bfff; }
+.card-icon {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 14px;
+  background: var(--purple-light);
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+.chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--mint);
+  margin: 3px 4px 3px 0;
+}
+.chip.purple { background: var(--purple-light); color: var(--purple); }
+.chip.blue { background: var(--blue); }
+.note {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--purple-light);
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+details {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 15px 17px;
+  margin-top: 10px;
+}
+summary { cursor: pointer; font-weight: 800; font-size: 14px; }
+pre {
+  overflow: auto;
+  padding: 18px;
+  background: var(--code);
+  color: #e9e6ff;
+  border-radius: 14px;
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.output {
+  padding: 13px 16px;
+  background: var(--mint);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+.big-o {
+  display: grid;
+  grid-template-columns: 115px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+}
+.big-o:last-child { border-bottom: 0; }
+.complexity {
+  font-family: "DM Mono", monospace;
+  color: var(--purple);
+  font-weight: 800;
+  background: var(--purple-light);
+  padding: 9px;
+  text-align: center;
+  border-radius: 9px;
+}
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 13px;
+  margin: 8px 0;
+}
+.quiz-option:hover { border-color: var(--purple); }
+.quiz-option.correct { background: var(--mint); border-color: #55b79b; }
+.quiz-option.wrong { background: #ffe9ec; border-color: #ef9aa6; color: #722b38; }
+.feedback { font-size: 13px; font-weight: 800; min-height: 22px; }
+.footer {
+  padding: 28px 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+}
+.search {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 0 0 22px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    height: auto;
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding: 10px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .side-label { display: none; }
+  .nav-link { white-space: nowrap; }
+  main { padding: 20px 15px 50px; }
+}
+@media (max-width: 520px) {
+  .grid { grid-template-columns: 1fr; }
+  .topbar { padding: 0 15px; }
+  .brand { font-size: 17px; }
+  .big-o { grid-template-columns: 95px minmax(0, 1fr); }
+}
+</style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand">📘 DSA <span>Notes</span></div>
+  <div class="top-actions">
+    <span class="muted" id="completion">0% learned</span>
+    <button class="pill" id="themeButton" onclick="toggleTheme()">☾ Theme</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="side-label">MY NOTEBOOK</div>
+      <a class="nav-link active" href="#home">✦ Overview</a>
+      <a class="nav-link" href="#structures">01 · Data Structures</a>
+      <a class="nav-link" href="#static-dynamic">02 · Static & Dynamic</a>
+      <a class="nav-link" href="#algorithm">03 · Algorithm</a>
+      <a class="nav-link" href="#complexity">04 · Complexity</a>
+      <a class="nav-link" href="#big-o">05 · Big O Notation</a>
+      <a class="nav-link" href="#practice">06 · Python Practice</a>
+      <a class="nav-link" href="#quiz">07 · Quick Quiz</a>
+    </div>
+  </aside>
+
+  <main>
+    <input class="search" id="search" placeholder="⌕  Search your notes..." oninput="searchNotes()">
+
+    <section class="hero" id="home">
+      <span class="hero-tag">YOUR PERSONAL STUDY SPACE</span>
+      <h1>DSA: Learn,<br>Practise, Grow 🚀</h1>
+      <p>
+        Data Structures and Algorithms — your notes, organised into
+        a clean interactive notebook. Read a topic, explore examples,
+        and mark each section as learned.
+      </p>
+      <div class="progress-row">
+        <span>YOUR LEARNING PROGRESS</span>
+        <span id="progressText">0 of 6 sections</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </section>
+
+    <section class="section searchable" id="structures">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">01 / YOUR NOTES</div>
+          <h2>Data Structures</h2>
+          <p class="muted">Your original topic list, arranged into cards.</p>
+        </div>
+        <button class="pill" onclick="markLearned('structures', this)">Mark learned ✓</button>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon">↔️</div>
+          <h3>LINEAR</h3>
+          <p class="muted">Your notes list these data structures:</p>
+          <span class="chip purple">Array</span>
+          <span class="chip purple">Stack</span>
+          <span class="chip purple">Queue</span>
+          <span class="chip purple">Linked List</span>
+          <details>
+            <summary>Explore this topic</summary>
+            <p class="muted">
+              Linear data structures arrange elements in a sequence.
+              Elements can be visited one after another.
+            </p>
+          </details>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🌳</div>
+          <h3>Non-Linear</h3>
+          <p class="muted">Your notes list these data structures:</p>
+          <span class="chip">Trees</span>
+          <span class="chip">Graph</span>
+          <span class="chip">Trie</span>
+          <span class="chip">Heap</span>
+          <details>
+            <summary>Explore this topic</summary>
+            <p class="muted">
+              Non-linear data structures organise elements in
+              hierarchical or network-like relationships.
+            </p>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section class="section searchable" id="static-dynamic">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">02 / YOUR NOTES</div>
+          <h2>Static and Dynamic</h2>
+          <p class="muted">The static/dynamic labels in your notes.</p>
+        </div>
+        <button class="pill" onclick="markLearned('static-dynamic', this)">Mark learned ✓</button>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon">📦</div>
+          <h3>Dynamic</h3>
+          <span class="chip purple">Array</span>
+          <p class="muted">Your note labels Array as Dynamic.</p>
+          <details>
+            <summary>What does dynamic mean?</summary>
+            <p class="muted">
+              Dynamic storage can grow or shrink while a program runs.
+              Some array implementations have a fixed size, while
+              dynamic arrays can resize.
+            </p>
+          </details>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🔒</div>
+          <h3>Static</h3>
+          <span class="chip blue">Stack</span>
+          <span class="chip blue">Queue</span>
+          <span class="chip blue">Linked List</span>
+          <p class="muted">Your note labels these as Static.</p>
+          <details>
+            <summary>Important clarification</summary>
+            <p class="muted">
+              Static/dynamic describes storage allocation or size behaviour.
+              Stack, queue, and linked list describe data structures.
+              They can be implemented with different storage approaches.
+              Keep your original labels for your notes, but remember
+              that the categories are not universally fixed.
+            </p>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section class="section searchable" id="algorithm">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">03 / YOUR NOTES</div>
+          <h2>Algorithm</h2>
+        </div>
+        <button class="pill" onclick="markLearned('algorithm', this)">Mark learned ✓</button>
+      </div>
+
+      <article class="card">
+        <div class="card-icon">🧭</div>
+        <h3>Your original notes</h3>
+        <div class="note">
+          “Algorithm comes from the name of the mathematician whse name is Al-Khwarizmi”
+        </div>
+        <div class="note">
+          “Algorithm means step by step process”
+        </div>
+        <p class="muted">
+          Next topic is Time and space complexity
+        </p>
+        <details>
+          <summary>Example of an algorithm</summary>
+          <p class="muted">
+            1. Start<br>
+            2. Take two numbers<br>
+            3. Add the numbers<br>
+            4. Display the result<br>
+            5. Stop
+          </p>
+        </details>
+      </article>
+    </section>
+
+    <section class="section searchable" id="complexity">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">04 / YOUR NOTES</div>
+          <h2>Time and Space Complexity</h2>
+          <p class="muted">Your notes introduce both time and space complexity.</p>
+        </div>
+        <button class="pill" onclick="markLearned('complexity', this)">Mark learned ✓</button>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon">⏱️</div>
+          <h3>Time Complexity</h3>
+          <p class="muted">
+            Describes how the amount of work an algorithm performs
+            grows as its input size increases.
+          </p>
+          <div class="note">We commonly express it using Big O notation.</div>
+        </article>
+        <article class="card">
+          <div class="card-icon">💾</div>
+          <h3>Space Complexity</h3>
+          <p class="muted">
+            Describes how the memory required by an algorithm grows
+            as the input size increases.
+          </p>
+          <div class="note">
+            Time is about computational work; space is about memory.
+          </div>
+        </article>
+      </div>
+
+      <article class="card" style="margin-top:16px">
+        <h3>Your code examples</h3>
+        <pre><code>print("HI")</code></pre>
+        <pre><code>a = 10
+b = 20
+c = a + b
+print(c)</code></pre>
+        <pre><code>print(10 + 20)</code></pre>
+        <details>
+          <summary>Show the outputs</summary>
+          <p class="muted">First example:</p>
+          <div class="output">HI</div>
+          <p class="muted">Second and third examples:</p>
+          <div class="output">30</div>
+        </details>
+      </article>
+    </section>
+
+    <section class="section searchable" id="big-o">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">05 / YOUR NOTES</div>
+          <h2>Big O Notation</h2>
+          <p class="muted">Your original list of complexity types and examples.</p>
+        </div>
+        <button class="pill" onclick="markLearned('big-o', this)">Mark learned ✓</button>
+      </div>
+
+      <article class="card">
+        <div class="big-o">
+          <div class="complexity">O(1)</div>
+          <div>
+            <h3>Constant</h3>
+            <p class="muted">Your note: Constant</p>
+            <details><summary>View example</summary>
+              <pre><code>print("HI")</code></pre>
+              <div class="output">HI</div>
+            </details>
+          </div>
+        </div>
+
+        <div class="big-o">
+          <div class="complexity">O(n)</div>
+          <div>
+            <h3>Linear</h3>
+            <p class="muted">Your note: Linear</p>
+            <pre><code>l = [1, 2, 3, 4, 5]
+for i in l:
+    print(i)</code></pre>
+            <button class="pill" onclick="showOutput('linearOutput')">Show output</button>
+            <div class="output" id="linearOutput" hidden>1
+2
+3
+4
+5</div>
+          </div>
+        </div>
+
+        <div class="big-o">
+          <div class="complexity">O(log N)</div>
+          <div>
+            <h3>Logarithmic</h3>
+            <p class="muted">Your note: Logarthmic</p>
+          </div>
+        </div>
+
+        <div class="big-o">
+          <div class="complexity">O(n log n)</div>
+          <div>
+            <h3>Linear Logarithmic</h3>
+            <p class="muted">Your note: Linear Logarithmic</p>
+          </div>
+        </div>
+
+        <div class="big-o">
+          <div class="complexity">O(n²)</div>
+          <div>
+            <h3>Quadratic</h3>
+            <p class="muted">Your note: Quadratic</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section searchable" id="practice">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">06 / PRACTISE</div>
+          <h2>Python Practice</h2>
+          <p class="muted">Explore the loop from your notes.</p>
+        </div>
+        <button class="pill" onclick="markLearned('practice', this)">Mark learned ✓</button>
+      </div>
+
+      <article class="card">
+        <h3>Loop through a list</h3>
+        <pre><code>l = [1, 2, 3, 4, 5]
+
+for i in l:
+    print(i)</code></pre>
+        <p class="muted">
+          The loop takes each element from the list and prints it.
+          Five elements mean five loop iterations.
+        </p>
+        <button class="pill" onclick="showOutput('practiceOutput')">Reveal output ↗</button>
+        <div id="practiceOutput" class="output" hidden>1
+2
+3
+4
+5</div>
+      </article>
+    </section>
+
+    <section class="section searchable" id="quiz">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">07 / TEST YOURSELF</div>
+          <h2>Quick Quiz</h2>
+          <p class="muted">Check your understanding of the notes.</p>
+        </div>
+      </div>
+
+      <article class="card">
+        <h3 id="question">1. What does an algorithm mean?</h3>
+        <div id="options">
+          <button class="quiz-option" onclick="answer(this, false)">A. A computer brand</button>
+          <button class="quiz-option" onclick="answer(this, true)">B. A step-by-step process</button>
+          <button class="quiz-option" onclick="answer(this, false)">C. A programming language</button>
+        </div>
+        <p class="feedback" id="feedback"></p>
+        <button class="pill" onclick="nextQuestion()">Next question →</button>
+      </article>
+    </section>
+
+    <footer class="footer">
+      Made for your learning journey ✦ DSA Notes
+    </footer>
+  </main>
+</div>
+
+<script>
+const sections = [
+  "structures", "static-dynamic", "algorithm",
+  "complexity", "big-o", "practice"
+];
+
+let learned = JSON.parse(localStorage.getItem("dsaLearned") || "[]");
+
+function updateProgress() {
+  const count = learned.length;
+  const percent = Math.round(count / sections.length * 100);
+  document.getElementById("progressFill").style.width = percent + "%";
+  document.getElementById("progressText").textContent =
+    count + " of " + sections.length + " sections";
+  document.getElementById("completion").textContent = percent + "% learned";
+
+  sections.forEach(id => {
+    const button = document.querySelector(
+      `#${id} .section-head button`
+    );
+    if (button) {
+      button.textContent = learned.includes(id)
+        ? "Learned ✓"
+        : "Mark learned ✓";
+    }
+  });
+
+  localStorage.setItem("dsaLearned", JSON.stringify(learned));
+}
+
+function markLearned(id) {
+  if (learned.includes(id)) {
+    learned = learned.filter(item => item !== id);
+  } else {
+    learned.push(id);
+  }
+  updateProgress();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  const dark = document.body.classList.contains("dark");
+  document.getElementById("themeButton").textContent =
+    dark ? "☀ Light" : "☾ Theme";
+  localStorage.setItem("dsaTheme", dark ? "dark" : "light");
+}
+
+function showOutput(id) {
+  const output = document.getElementById(id);
+  output.hidden = !output.hidden;
+}
+
+function searchNotes() {
+  const query = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".searchable").forEach(section => {
+    section.style.display =
+      section.innerText.toLowerCase().includes(query) ? "" : "none";
+  });
+}
+
+const questions = [
+  {
+    q: "1. What does an algorithm mean?",
+    options: [
+      "A. A computer brand",
+      "B. A step-by-step process",
+      "C. A programming language"
+    ],
+    correct: 1,
+    explanation: "Correct! Your notes define an algorithm as a step-by-step process."
+  },
+  {
+    q: "2. Which item appears under LINEAR in your notes?",
+    options: ["A. Graph", "B. Trie", "C. Queue"],
+    correct: 2,
+    explanation: "Correct! Queue is listed under LINEAR in your notes."
+  },
+  {
+    q: "3. What does O(n) represent in your notes?",
+    options: ["A. Linear", "B. Quadratic", "C. Constant"],
+    correct: 0,
+    explanation: "Correct! Your notes label O(n) as Linear."
+  },
+  {
+    q: "4. Which topic comes after Algorithm in your notes?",
+    options: [
+      "A. Web development",
+      "B. Time and space complexity",
+      "C. Operating systems"
+    ],
+    correct: 1,
+    explanation: "Correct! Your note says the next topic is Time and space complexity."
+  }
+];
+
+let questionIndex = 0;
+let hasAnswered = false;
+
+function renderQuestion() {
+  const q = questions[questionIndex];
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("options").innerHTML = "";
+
+  q.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "quiz-option";
+    button.textContent = option;
+    button.onclick = () => chooseAnswer(button, index);
+    document.getElementById("options").appendChild(button);
+  });
+
+  hasAnswered = false;
+}
+
+function answer(button, correct) {
+  button.classList.add(correct ? "correct" : "wrong");
+  document.getElementById("feedback").textContent =
+    correct ? "Correct! 🎉" : "Not quite. Try again!";
+}
+
+function chooseAnswer(button, index) {
+  if (hasAnswered) return;
+  hasAnswered = true;
+
+  const q = questions[questionIndex];
+  const buttons = document.querySelectorAll(".quiz-option");
+
+  buttons.forEach((b, i) => {
+    if (i === q.correct) b.classList.add("correct");
+    b.disabled = true;
+  });
+
+  if (index === q.correct) {
+    document.getElementById("feedback").textContent = "Correct! 🎉 " + q.explanation;
+  } else {
+    button.classList.add("wrong");
+    document.getElementById("feedback").textContent = "Review the notes and try the next question.";
+  }
+}
+
+function nextQuestion() {
+  questionIndex = (questionIndex + 1) % questions.length;
+  renderQuestion();
+}
+
+if (localStorage.getItem("dsaTheme") === "dark") {
+  document.body.classList.add("dark");
+  document.getElementById("themeButton").textContent = "☀ Light";
+}
+
+updateProgress();
+renderQuestion();
+</script>
+</body>
+</html>
